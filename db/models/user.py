@@ -1,5 +1,7 @@
 from db import Base
-from sqlalchemy import Column, BigInteger, String, DateTime, Integer, func
+from sqlalchemy import Column, BigInteger, String, DateTime,\
+  Integer, func
+from sqlalchemy.orm import relationship
 from db.util import sf
 
 
@@ -31,3 +33,18 @@ class User(Base):
         Integer,
         default=1
     )
+    guilds = relationship(
+            "GuildMember",
+            back_populates="member",
+            cascade="all, delete",
+            passive_deletes=True
+        )
+    channels = relationship(
+            "ChannelMember",
+            back_populates="member",
+            cascade="all, delete",
+            passive_deletes=True
+        )
+
+    def __repr__(self) -> str:
+        return f"<User user_id={self.user_id} username={self.username}>"

@@ -1,6 +1,9 @@
 grpcio==1.53.0
 grpcio-tools==1.53.0
+marshmallow==3.19.0
+packaging==23.0
 protobuf==4.22.1
+psycopg2-binary==2.9.6
 python-dotenv==1.0.0
 snowflake-id==0.0.2
 SQLAlchemy==2.0.8
