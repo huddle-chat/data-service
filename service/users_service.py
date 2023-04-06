@@ -11,7 +11,9 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
             session = Session()
             user = fetch_user_for_login(request.email, session)
             if user:
+
                 user_obj = users_pb2.UserForLogin(**user)
+                print(user_obj)
                 response = users_pb2.LoginResponse(user=user_obj)
 
                 return response
@@ -19,7 +21,8 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Couldnt find a user with that email.")
                 return users_pb2.LoginResponse()
-        except Exception:
+        except Exception as e:
+            print(e)
             session.rollback()
             session.close()
             return users_pb2.LoginResponse()

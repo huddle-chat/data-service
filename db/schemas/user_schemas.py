@@ -9,6 +9,7 @@ class UserSchema(Schema):
     online_status = fields.Int()
     created_at = fields.DateTime()
     password = fields.Str()
+    is_verified = fields.Bool()
 
 
 class UserNoEmail(Schema):

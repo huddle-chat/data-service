@@ -12,6 +12,7 @@ message UserForLogin {
   int32 online_status = 5;
   google.protobuf.Timestamp created_at = 6;
   string password = 7;
+  bool is_verified = 8;
 }
 
 message LoginRequest {
