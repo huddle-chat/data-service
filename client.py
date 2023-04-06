@@ -1,7 +1,7 @@
 import grpc
 from proto import users_pb2, users_pb2_grpc
 
-
+#This client.py file only exists for testing purposes
 def run():
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = users_pb2_grpc.UserServiceStub(channel)
