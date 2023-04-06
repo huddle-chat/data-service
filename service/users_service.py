@@ -27,7 +27,7 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
     def RegisterUser(self, request, context):
         try:
             session = Session()
-            create_user(
+            verification_code = create_user(
                 request.username,
                 request.email,
                 request.password,
@@ -36,7 +36,8 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
 
             return users_pb2.RegisterResponse(
                 success=True,
-                message="Thanks for Signing up!"
+                message="Thanks for Signing up!",
+                verification_code=verification_code
             )
 
         except IntegrityError:

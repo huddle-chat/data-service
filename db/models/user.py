@@ -1,8 +1,9 @@
 from db import Base
 from sqlalchemy import Column, BigInteger, String, DateTime,\
-  Integer, func
+  Integer, func, Boolean
 from sqlalchemy.orm import relationship
 from db.util import sf
+import random
 
 
 class User(Base):
@@ -32,6 +33,14 @@ class User(Base):
     online_status = Column(
         Integer,
         default=1
+    )
+    verification_code = Column(
+        Integer,
+        default=lambda: random.randint(100000, 999999)
+    )
+    is_verified = Column(
+        Boolean,
+        default=False
     )
     guilds = relationship(
             "GuildMember",

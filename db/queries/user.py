@@ -4,7 +4,7 @@ from db.schemas.user_schemas import UserSchema
 from google.protobuf.timestamp_pb2 import Timestamp
 
 
-def create_user(username: str, email: str, password: str, session) -> None:
+def create_user(username: str, email: str, password: str, session) -> int:
     hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
     new_user = User(
@@ -15,7 +15,11 @@ def create_user(username: str, email: str, password: str, session) -> None:
 
     session.add(new_user)
     session.commit()
+    session.refresh(new_user)
+    code = new_user.verification_code
     session.close()
+    print(code)
+    return code
 
 
 def fetch_user_for_login(email: str, session):
