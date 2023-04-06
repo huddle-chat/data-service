@@ -8,6 +8,7 @@ class UserSchema(Schema):
     avatar = fields.Str()
     online_status = fields.Int()
     created_at = fields.DateTime()
+    password = fields.Str()
 
 
 class UserNoEmail(Schema):

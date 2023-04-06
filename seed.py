@@ -1,13 +1,13 @@
 from db import Session, engine, Base
-from db.models.user import User
 from db.models.role import Role
 from db.models.message import Message
+from db.models.guild import Guild
+from db.models.channel import Channel
 from db.models.guild_member import GuildMember
 from db.models.guild_member_role import GuildMemberRole
-from db.models.channel import Channel
 from db.models.channel_member import ChannelMember
 from db.models.channel_allowed_role import ChannelAllowedRole
-from db.models.guild import Guild
+from db.models.user import User
 
 session = Session()
 
