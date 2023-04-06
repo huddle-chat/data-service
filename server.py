@@ -28,6 +28,7 @@ def serve():
     users_pb2_grpc.add_UserServiceServicer_to_server(UsersServicer(), server)
 
     server.add_insecure_port(f"[::]:{PORT}")
+    print(f"Server now listening on port: {PORT}!!")
     server.start()
     server.wait_for_termination()
 

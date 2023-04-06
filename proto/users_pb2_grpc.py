@@ -16,8 +16,13 @@ class UserServiceStub(object):
         """
         self.GetUserForLogin = channel.unary_unary(
                 '/huddle_chat.UserService/GetUserForLogin',
-                request_serializer=proto_dot_users__pb2.UserLoginRequest.SerializeToString,
+                request_serializer=proto_dot_users__pb2.LoginRequest.SerializeToString,
                 response_deserializer=proto_dot_users__pb2.LoginResponse.FromString,
+                )
+        self.RegisterUser = channel.unary_unary(
+                '/huddle_chat.UserService/RegisterUser',
+                request_serializer=proto_dot_users__pb2.RegisterRequest.SerializeToString,
+                response_deserializer=proto_dot_users__pb2.RegisterResponse.FromString,
                 )
 
 
@@ -30,13 +35,24 @@ class UserServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RegisterUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetUserForLogin': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUserForLogin,
-                    request_deserializer=proto_dot_users__pb2.UserLoginRequest.FromString,
+                    request_deserializer=proto_dot_users__pb2.LoginRequest.FromString,
                     response_serializer=proto_dot_users__pb2.LoginResponse.SerializeToString,
+            ),
+            'RegisterUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.RegisterUser,
+                    request_deserializer=proto_dot_users__pb2.RegisterRequest.FromString,
+                    response_serializer=proto_dot_users__pb2.RegisterResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +76,24 @@ class UserService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/GetUserForLogin',
-            proto_dot_users__pb2.UserLoginRequest.SerializeToString,
+            proto_dot_users__pb2.LoginRequest.SerializeToString,
             proto_dot_users__pb2.LoginResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def RegisterUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/RegisterUser',
+            proto_dot_users__pb2.RegisterRequest.SerializeToString,
+            proto_dot_users__pb2.RegisterResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

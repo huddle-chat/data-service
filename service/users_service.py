@@ -1,28 +1,49 @@
 from proto import users_pb2, users_pb2_grpc
-from google.protobuf.timestamp_pb2 import Timestamp
+from sqlalchemy.exc import IntegrityError
+import grpc
+from db.queries.user import fetch_user_for_login, create_user
 from db import Session
-from db.models.user import User
-from db.schemas.user_schemas import UserSchema
 
 
 class UsersServicer(users_pb2_grpc.UserServiceServicer):
     def GetUserForLogin(self, request, context):
-        session = Session()
-        db_user = session.query(User).filter_by(email=request.email).first()
-        if db_user:
-            schema = UserSchema()
+        try:
+            session = Session()
+            user = fetch_user_for_login(request.email, session)
+            if user:
+                user_obj = users_pb2.UserForLogin(**user)
+                response = users_pb2.LoginResponse(user=user_obj)
 
-            user_dict = schema.dump(db_user)
-
-            test_ts = Timestamp()
-            test_ts.FromDatetime(db_user.created_at)
-
-            user_dict["created_at"] = test_ts
-
-            user_obj = users_pb2.UserForLogin(**user_dict)
-
-            response = users_pb2.LoginResponse(user=user_obj)
-
-            return response
-        else:
+                return response
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Couldnt find a user with that email.")
+                return users_pb2.LoginResponse()
+        except Exception:
+            session.rollback()
+            session.close()
             return users_pb2.LoginResponse()
+
+    def RegisterUser(self, request, context):
+        try:
+            session = Session()
+            create_user(
+                request.username,
+                request.email,
+                request.password,
+                session
+            )
+
+            return users_pb2.RegisterResponse(
+                success=True,
+                message="Thanks for Signing up!"
+            )
+
+        except IntegrityError:
+            session.rollback()
+            session.close()
+            context.set_code(grpc.StatusCode.ALREADY_EXISTS)
+            context.set_details(
+                "A user with that username or email already exists."
+            )
+            return users_pb2.RegisterResponse()
