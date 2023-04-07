@@ -24,6 +24,16 @@ class UserServiceStub(object):
                 request_serializer=proto_dot_users__pb2.RegisterRequest.SerializeToString,
                 response_deserializer=proto_dot_users__pb2.RegisterResponse.FromString,
                 )
+        self.GetUserVerification = channel.unary_unary(
+                '/huddle_chat.UserService/GetUserVerification',
+                request_serializer=proto_dot_users__pb2.VerificationRequest.SerializeToString,
+                response_deserializer=proto_dot_users__pb2.VerificationResponse.FromString,
+                )
+        self.VerifyUser = channel.unary_unary(
+                '/huddle_chat.UserService/VerifyUser',
+                request_serializer=proto_dot_users__pb2.VerificationRequest.SerializeToString,
+                response_deserializer=proto_dot_users__pb2.VerificationResponse.FromString,
+                )
 
 
 class UserServiceServicer(object):
@@ -41,6 +51,18 @@ class UserServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetUserVerification(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def VerifyUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +75,16 @@ def add_UserServiceServicer_to_server(servicer, server):
                     servicer.RegisterUser,
                     request_deserializer=proto_dot_users__pb2.RegisterRequest.FromString,
                     response_serializer=proto_dot_users__pb2.RegisterResponse.SerializeToString,
+            ),
+            'GetUserVerification': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUserVerification,
+                    request_deserializer=proto_dot_users__pb2.VerificationRequest.FromString,
+                    response_serializer=proto_dot_users__pb2.VerificationResponse.SerializeToString,
+            ),
+            'VerifyUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.VerifyUser,
+                    request_deserializer=proto_dot_users__pb2.VerificationRequest.FromString,
+                    response_serializer=proto_dot_users__pb2.VerificationResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +127,39 @@ class UserService(object):
         return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/RegisterUser',
             proto_dot_users__pb2.RegisterRequest.SerializeToString,
             proto_dot_users__pb2.RegisterResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetUserVerification(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/GetUserVerification',
+            proto_dot_users__pb2.VerificationRequest.SerializeToString,
+            proto_dot_users__pb2.VerificationResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def VerifyUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/VerifyUser',
+            proto_dot_users__pb2.VerificationRequest.SerializeToString,
+            proto_dot_users__pb2.VerificationResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

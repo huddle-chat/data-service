@@ -40,3 +40,28 @@ def fetch_user_for_login(email: str, session):
         return user_dict
     else:
         return None
+
+
+def fetch_user_verification(email: str, session):
+    user = session.query(User.email, User.verification_code, User.is_verified)\
+        .filter_by(email=email).first()
+
+    if user:
+        return user
+
+    else:
+        return None
+
+
+def verify_user(email: str, session):
+    user = session.query(User).filter_by(email=email).first()
+
+    if user:
+        user.is_verified = True
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        session.close()
+        return user
+    else:
+        return None

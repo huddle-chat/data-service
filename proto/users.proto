@@ -15,6 +15,16 @@ message UserForLogin {
   bool is_verified = 8;
 }
 
+message VerificationResponse {
+  string email = 1;
+  int32 verification_code = 2;
+  bool is_verified = 3;
+}
+
+message VerificationRequest {
+  string email = 1;
+}
+
 message LoginRequest {
   string email = 1;
 }
@@ -38,4 +48,6 @@ message RegisterResponse {
 service UserService {
   rpc GetUserForLogin(LoginRequest) returns (LoginResponse) {}
   rpc RegisterUser(RegisterRequest) returns (RegisterResponse) {}
+  rpc GetUserVerification(VerificationRequest) returns (VerificationResponse) {}
+  rpc VerifyUser(VerificationRequest) returns (VerificationResponse) {}
 }

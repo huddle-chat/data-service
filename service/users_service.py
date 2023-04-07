@@ -1,7 +1,8 @@
 from proto import users_pb2, users_pb2_grpc
 from sqlalchemy.exc import IntegrityError
 import grpc
-from db.queries.user import fetch_user_for_login, create_user
+from db.queries.user import fetch_user_for_login, create_user,\
+    fetch_user_verification, verify_user
 from db import Session
 
 
@@ -51,3 +52,39 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
                 "A user with that username or email already exists."
             )
             return users_pb2.RegisterResponse()
+
+    def GetUserVerification(self, request, context):
+        try:
+            session = Session()
+            user = fetch_user_verification(request.email, session)
+            if user:
+                return users_pb2.VerificationResponse(
+                    email=user.email,
+                    verification_code=user.verification_code,
+                    is_verified=user.is_verified
+                )
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Couldnt find a user with that email.")
+                return users_pb2.VerificationResponse()
+        except Exception as e:
+            print(e)
+            return users_pb2.VerificationResponse()
+
+    def VerifyUser(self, request, context):
+        try:
+            session = Session()
+            user = verify_user(request.email, session)
+            if user:
+                return users_pb2.VerificationResponse(
+                    email = user.email,
+                    verification_code=user.verification_code,
+                    is_verified=user.is_verified
+                )
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Couldnt find a user with that email.")
+                return users_pb2.VerificationResponse()
+        except Exception as e:
+            print(e)
+            return users_pb2.VerificationResponse()
