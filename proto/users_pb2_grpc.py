@@ -34,6 +34,11 @@ class UserServiceStub(object):
                 request_serializer=proto_dot_users__pb2.VerificationRequest.SerializeToString,
                 response_deserializer=proto_dot_users__pb2.VerificationResponse.FromString,
                 )
+        self.GetCurrentUserById = channel.unary_unary(
+                '/huddle_chat.UserService/GetCurrentUserById',
+                request_serializer=proto_dot_users__pb2.CurrentUserByIdRequest.SerializeToString,
+                response_deserializer=proto_dot_users__pb2.LoginResponse.FromString,
+                )
 
 
 class UserServiceServicer(object):
@@ -63,6 +68,12 @@ class UserServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetCurrentUserById(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -85,6 +96,11 @@ def add_UserServiceServicer_to_server(servicer, server):
                     servicer.VerifyUser,
                     request_deserializer=proto_dot_users__pb2.VerificationRequest.FromString,
                     response_serializer=proto_dot_users__pb2.VerificationResponse.SerializeToString,
+            ),
+            'GetCurrentUserById': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCurrentUserById,
+                    request_deserializer=proto_dot_users__pb2.CurrentUserByIdRequest.FromString,
+                    response_serializer=proto_dot_users__pb2.LoginResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -161,5 +177,22 @@ class UserService(object):
         return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/VerifyUser',
             proto_dot_users__pb2.VerificationRequest.SerializeToString,
             proto_dot_users__pb2.VerificationResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetCurrentUserById(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/huddle_chat.UserService/GetCurrentUserById',
+            proto_dot_users__pb2.CurrentUserByIdRequest.SerializeToString,
+            proto_dot_users__pb2.LoginResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

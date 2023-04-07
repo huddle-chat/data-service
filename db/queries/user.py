@@ -65,3 +65,23 @@ def verify_user(email: str, session):
         return user
     else:
         return None
+
+
+def fetch_current_user_by_id(user_id: int, session):
+    user = session.query(User).filter_by(user_id=user_id).first()
+    session.close()
+
+    if user:
+        schema = UserSchema()
+
+        user_dict = schema.dump(user)
+
+        ts = Timestamp()
+        ts.FromDatetime(user.created_at)
+
+        user_dict["created_at"] = ts
+
+        return user_dict
+
+    else:
+        return None

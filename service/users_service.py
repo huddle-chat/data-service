@@ -2,7 +2,7 @@ from proto import users_pb2, users_pb2_grpc
 from sqlalchemy.exc import IntegrityError
 import grpc
 from db.queries.user import fetch_user_for_login, create_user,\
-    fetch_user_verification, verify_user
+    fetch_user_verification, verify_user, fetch_current_user_by_id
 from db import Session
 
 
@@ -22,7 +22,7 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Couldnt find a user with that email.")
                 return users_pb2.LoginResponse()
-        except Exception as e:
+        except Exception:
             session.rollback()
             session.close()
             return users_pb2.LoginResponse()
@@ -66,8 +66,7 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Couldnt find a user with that email.")
                 return users_pb2.VerificationResponse()
-        except Exception as e:
-
+        except Exception:
             return users_pb2.VerificationResponse()
 
     def VerifyUser(self, request, context):
@@ -84,6 +83,26 @@ class UsersServicer(users_pb2_grpc.UserServiceServicer):
                 context.set_code(grpc.StatusCode.NOT_FOUND)
                 context.set_details("Couldnt find a user with that email.")
                 return users_pb2.VerificationResponse()
-        except Exception as e:
-
+        except Exception:
             return users_pb2.VerificationResponse()
+
+    def GetCurrentUserById(self, request, context):
+        try:
+            session = Session()
+            user = fetch_current_user_by_id(request.user_id, session)
+
+            if user:
+                user_obj = users_pb2.UserForLogin(**user)
+
+                response = users_pb2.LoginResponse(user=user_obj)
+
+                return response
+            else:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Couldnt find a user with that email.")
+                return users_pb2.LoginResponse()
+
+        except Exception:
+            session.rollback()
+            session.close()
+            return users_pb2.LoginResponse()

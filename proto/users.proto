@@ -45,9 +45,14 @@ message RegisterResponse {
   int32 verification_code = 3;
 }
 
+message CurrentUserByIdRequest {
+  int64 user_id = 1;
+}
+
 service UserService {
   rpc GetUserForLogin(LoginRequest) returns (LoginResponse) {}
   rpc RegisterUser(RegisterRequest) returns (RegisterResponse) {}
   rpc GetUserVerification(VerificationRequest) returns (VerificationResponse) {}
   rpc VerifyUser(VerificationRequest) returns (VerificationResponse) {}
+  rpc GetCurrentUserById(CurrentUserByIdRequest) returns (LoginResponse) {}
 }
