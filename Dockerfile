@@ -1,7 +1,7 @@
 FROM python
 
 RUN mkdir /data_service
-COPY data_service/ /data_service
+COPY . /data_service
 
 WORKDIR /data_service
 
