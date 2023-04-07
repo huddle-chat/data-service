@@ -1,0 +1,6 @@
+assets/
+**/pycache/
+.git
+.cache
+*.md
+*.pyc
