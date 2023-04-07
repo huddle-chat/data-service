@@ -18,7 +18,7 @@ def create_user(username: str, email: str, password: str, session) -> int:
     session.refresh(new_user)
     code = new_user.verification_code
     session.close()
-    print(code)
+
     return code
 
 

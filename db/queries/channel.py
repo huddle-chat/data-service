@@ -73,6 +73,4 @@ def add_members_to_channel(channel_id: int):
         .filter_by(channel_id=channel_id)\
         .all()
     for role_id in allowed_roles:
-        print(role_id[0])
-    # print(allowed_roles)
     session.close()
