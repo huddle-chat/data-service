@@ -15,8 +15,9 @@ from concurrent import futures
 import grpc
 from dotenv import load_dotenv
 import os
-from proto import users_pb2_grpc
+from proto import users_pb2_grpc, guilds_pb2_grpc
 from service.users_service import UsersServicer
+from service.guilds_service import GuildServicer
 
 load_dotenv()
 
@@ -26,6 +27,7 @@ PORT = os.getenv("PORT")
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     users_pb2_grpc.add_UserServiceServicer_to_server(UsersServicer(), server)
+    guilds_pb2_grpc.add_GuildServiceServicer_to_server(GuildServicer(), server)
 
     server.add_insecure_port(f"[::]:{PORT}")
     print(f"Server now listening on port: {PORT}!!")

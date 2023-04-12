@@ -13,3 +13,7 @@ class GuildSchema(Schema):
     created_at = fields.DateTime()
     icon = fields.Str()
     description = fields.String()
+
+
+class GuildList(Schema):
+    guilds = fields.List(fields.Nested(GuildSchema))
