@@ -9,9 +9,13 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from sqlalchemy import and_, func, case
 
 
-
-
-def create_guild(owner_id: int, guild_name: str, session: Session, description=None, icon="None"):
+def create_guild(
+        owner_id: int,
+        guild_name: str,
+        session: Session,
+        description=None,
+        icon="None"
+):
 
     owner = session.query(User).filter_by(user_id=owner_id).first()
     new_entries = []
@@ -19,7 +23,7 @@ def create_guild(owner_id: int, guild_name: str, session: Session, description=N
 
         schema = GuildSchema()
         # If owner exists, create thew new guild
-        new_guild = Guild(name=guild_name, description=description)
+        new_guild = Guild(name=guild_name, description=description, icon=icon)
         # Assign the owner as the first guild member
         gm = GuildMember(is_owner=True)
         gm.member = owner
@@ -102,8 +106,6 @@ def fetch_guilds_by_user_id(user_id: int, session: Session):
      .group_by(Guild.guild_id, GuildMember.is_owner)\
      .all()
 
-    print(guilds)
-
 
 #  # TODO:
 #     # Returned object should include:
@@ -115,15 +117,14 @@ def fetch_guilds_by_user_id(user_id: int, session: Session):
             'guilds': [guild for guild, _, _ in guilds]
         })
 
-        for i in range(len(guilds)):
-            guild, is_owner, has_unread = guilds[i]
+        for i, result in enumerate(guilds):
+            guild, is_owner, has_unread = result
             ts = Timestamp()
             ts.FromDatetime(guild.created_at)
             guilds_dict['guilds'][i]['created_at'] = ts
             guilds_dict['guilds'][i]['is_owner'] = is_owner
             guilds_dict['guilds'][i]['has_unread'] = has_unread
 
-        print(guilds_dict)
         session.close()
         return guilds_dict['guilds']
     session.close()

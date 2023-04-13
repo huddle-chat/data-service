@@ -25,11 +25,9 @@ class GuildServicer(guilds_pb2_grpc.GuildServiceServicer):
                 icon=request.icon
             )
 
-
-
             new_guild['is_owner'] = True
             new_guild['has_unread'] = False
-            print(new_guild)
+
             return guilds_pb2.CreateGuildResponse(guild=new_guild)
 
         except Exception as e:

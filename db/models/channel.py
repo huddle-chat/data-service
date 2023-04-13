@@ -53,4 +53,3 @@ class Channel(Base):
 
     def __repr__(self):
         return f"<Channel id={self.channel_id}>"
-

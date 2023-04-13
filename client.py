@@ -1,6 +1,7 @@
 import grpc
 from proto import guilds_pb2, guilds_pb2_grpc
 
+
 def test():
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = guilds_pb2_grpc.GuildServiceStub(channel)
@@ -13,6 +14,7 @@ def test():
         response = stub.CreateGuild(request)
 
         print(response)
+
 
 if __name__ == "__main__":
     test()
