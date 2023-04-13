@@ -1,5 +1,5 @@
 from proto import guilds_pb2, guilds_pb2_grpc
-from db.queries.guild import fetch_guilds_by_user_id
+from db.queries.guild import fetch_guilds_by_user_id, create_guild
 from db import Session
 
 
@@ -14,3 +14,26 @@ class GuildServicer(guilds_pb2_grpc.GuildServiceServicer):
             session.rollback()
             session.close()
             return guilds_pb2.GuildsByUserIdResponse()
+
+    def CreateGuild(self, request, context):
+        try:
+            session = Session()
+            new_guild = create_guild(
+                request.user_id,
+                request.name, session,
+                description=request.description,
+                icon=request.icon
+            )
+
+
+
+            new_guild['is_owner'] = True
+            new_guild['has_unread'] = False
+            print(new_guild)
+            return guilds_pb2.CreateGuildResponse(guild=new_guild)
+
+        except Exception as e:
+            print(e)
+            return guilds_pb2.CreateGuildResponse()
+
+        return {}
